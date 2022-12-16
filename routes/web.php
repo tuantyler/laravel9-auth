@@ -15,6 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::prefix('test')->group(function () {
+    Route::get('testing','App\Http\Controllers\WelcomeController@welcome');
+})->middleware("checkblocked");
 // Homepage Route
 Route::group(['middleware' => ['web', 'checkblocked']], function () {
     Route::get('/', 'App\Http\Controllers\WelcomeController@welcome')->name('welcome');
