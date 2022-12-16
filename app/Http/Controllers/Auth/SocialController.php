@@ -32,8 +32,9 @@ class SocialController extends Controller
         $providerKey = Config::get('services.'.$provider);
 
         if (empty($providerKey)) {
-            return view('pages.status')
-                ->with('error', trans('socials.noProvider'));
+            return "error occur";
+            // return view('pages.status')
+            //     ->with('error', trans('socials.noProvider'));
         }
 
         return Socialite::driver($provider)->redirect();
