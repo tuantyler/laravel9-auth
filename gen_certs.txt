@@ -1,0 +1,1 @@
+mkcert --cert-file "./ssl_configurations/certs/ssl.pem" --key-file "./ssl_configurations/certs/ssl-key.pem" localhost

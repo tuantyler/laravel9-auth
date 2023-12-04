@@ -58,7 +58,7 @@ class SocialController extends Controller
                 ->with('message', trans('socials.denied'));
         }
 
-        $socialUserObject = Socialite::driver($provider)->user();
+        $socialUserObject = Socialite::driver('google')->stateless()->user();
 
         // Check if email is already registered
         $userCheck = User::where('email', '=', $socialUserObject->email)->first();
