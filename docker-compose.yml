@@ -1,0 +1,74 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/Dockerfile
+    container_name: internship-app
+    depends_on:
+      - mysql
+      - redis
+      - mailpit
+    ports:
+      - 8000:80
+      - 443:443
+      - 5173:5173
+    volumes:
+      - ./:/var/www/html
+      - ./ssl_configurations/certs/:/etc/myssl/certs
+
+  mysql:
+    image: mysql:8.1
+    container_name: internship-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: internship-2023
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - internship-db:/var/lib/mysql/
+
+  # redis service
+  redis:
+    image: redis:alpine
+    container_name: internship-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - internship-redis:/data
+
+  # mailpit - mail service
+  mailpit:
+    image: axllent/mailpit
+    container_name: internship-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+
+  # Minio Service
+  minio:
+    image: minio/minio:latest
+    container_name: internship-minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio_secret
+    volumes:
+      - internship-minio:/data
+    command:
+      minio server --console-address ":9001" /data
+
+networks:
+  laravel-exa:
+    driver: bridge
+
+volumes:
+  internship-db:
+    driver: local
+  internship-minio:
+    driver: local
+  internship-redis:
+    driver: local
